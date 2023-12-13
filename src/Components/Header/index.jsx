@@ -20,9 +20,10 @@ export default function Header() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const storedToken = localStorage.getItem("token-login")
-      ? JSON.parse(localStorage.getItem("token-login")) : '';
+      ? JSON.parse(localStorage.getItem("token-login"))
+      : "";
 
-      console.log(storedToken, typeof toredToken)
+    console.log(storedToken, typeof toredToken);
 
     if (storedToken && storedToken !== "") {
       setIsLogged(true);
@@ -42,45 +43,57 @@ export default function Header() {
 
           {isLogged ? (
             isOpenNav ? (
-              <ul className={classes.nav}>
-                {isTabletOrMobile && (
-                  <IconButton
-                    edge="start"
-                    className={classes.menuClose}
-                    color="default"
-                    aria-label="close"
-                    size="medium"
-                    onClick={() => setIsOpenNav(!isOpenNav)}
-                  >
-                    <Close color="error" fontSize="large" />
-                  </IconButton>
-                )}
-                <li className={classes.itemNav}>
-                  <a className={classes.linkNav} href="/">
-                    Home
-                  </a>
-                </li>
-                <li className={classes.itemNav}>
-                  <a className={classes.linkNav} href="/itineraries">
-                    Itineraries
-                  </a>
-                </li>
-                <li className={classes.itemNav}>
-                  <a className={classes.linkNav} href="/my-itineraries">
-                    My Itineraries
-                  </a>
-                </li>
-                <li className={classes.itemNav}>
-                  <a className={classes.linkNav} href="/created-itineraries">
-                    New Itinerary
-                  </a>
-                </li>
-                <li className={classes.itemNav}>
-                  <a className={classes.linkNav} href="/travel-tips">
-                    Travel Tips
-                  </a>
-                </li>
-              </ul>
+              <>
+                <ul className={classes.nav}>
+                  {isTabletOrMobile && (
+                    <IconButton
+                      edge="start"
+                      className={classes.menuClose}
+                      color="default"
+                      aria-label="close"
+                      size="medium"
+                      onClick={() => setIsOpenNav(!isOpenNav)}
+                    >
+                      <Close color="error" fontSize="large" />
+                    </IconButton>
+                  )}
+                  <li className={classes.itemNav}>
+                    <a className={classes.linkNav} href="/">
+                      Home
+                    </a>
+                  </li>
+                  <li className={classes.itemNav}>
+                    <a className={classes.linkNav} href="/itineraries">
+                      Itineraries
+                    </a>
+                  </li>
+                  <li className={classes.itemNav}>
+                    <a className={classes.linkNav} href="/my-itineraries">
+                      My Itineraries
+                    </a>
+                  </li>
+                  <li className={classes.itemNav}>
+                    <a className={classes.linkNav} href="/created-itineraries">
+                      New Itinerary
+                    </a>
+                  </li>
+                  <li className={classes.itemNav}>
+                    <a className={classes.linkNav} href="/travel-tips">
+                      Travel Tips
+                    </a>
+                  </li>
+                </ul>
+                <Button
+                  onClick={() => {
+                    localStorage.removeItem("token-login");
+                    window.location.href = "/";
+                  }}
+                  color="default"
+                  variant="contained"
+                >
+                  Logout
+                </Button>
+              </>
             ) : (
               <></>
             )
@@ -106,11 +119,13 @@ export default function Header() {
               </Button>
             </div>
           )}
-          {token.user&& <div>
-            <a href={"/user:"+token.user[0]._id}>
-              <img src={token.user[0].photo} alt="Sua foto de perfil" />
-            </a>
-          </div>}
+          {token.user && (
+            <div>
+              <a href={"/user:" + token.user[0]._id}>
+                <img src={token.user[0].photo} alt="Sua foto de perfil" />
+              </a>
+            </div>
+          )}
           {isTabletOrMobile && isLogged ? (
             <Toolbar>
               <IconButton
