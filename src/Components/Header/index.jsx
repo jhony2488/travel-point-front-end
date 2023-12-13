@@ -71,6 +71,11 @@ export default function Header() {
                   </a>
                 </li>
                 <li className={classes.itemNav}>
+                  <a className={classes.linkNav} href="/created-itineraries">
+                    New Itinerary
+                  </a>
+                </li>
+                <li className={classes.itemNav}>
                   <a className={classes.linkNav} href="/travel-tips">
                     Travel Tips
                   </a>

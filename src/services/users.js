@@ -29,7 +29,7 @@ export const getUsers = ({ id, email }) => {
   })
 }
 export const login = (email, password) => {
-  alert(email, password)
+
   return api.post(
     '/login',
     {

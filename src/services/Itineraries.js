@@ -2,7 +2,7 @@
 
 import { api, token } from './api'
 
-export const getItineraries = ({ id, idUser }) => {
+export const getItineraries = ({ id=null, idUser=null }) => {
   const filter = `?id=${id}`
   const filterIdUser = `?id=${idUser}`
 
@@ -14,7 +14,7 @@ export const getItineraries = ({ id, idUser }) => {
       },
     })
   }
-  if (idUser) {
+ else if (idUser) {
     return api.get(`/itineraries${filterIdUser}`, {
       headers: {
         Authorization: token,
@@ -22,13 +22,16 @@ export const getItineraries = ({ id, idUser }) => {
       },
     })
   }
-  return api.get('/itineraries', {
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  })
+  else{
+    return api.get('/itineraries', {
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+    })
+  }
 }
+
 
 export const setItinerarie = ({
   title,
@@ -41,12 +44,8 @@ export const setItinerarie = ({
   idUser,
   thumbnail,
 }) => {
-  return api.post('/itineraries', {
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-    data: {
+  console.log(
+    {
       title,
       duration,
       country,
@@ -57,7 +56,27 @@ export const setItinerarie = ({
       idUser,
       thumbnail,
     },
-  })
+  )
+  return api.post(
+    '/itineraries',
+    {
+      title,
+      duration,
+      country,
+      city,
+      dataInitial,
+      publicVisible,
+      description,
+      idUser,
+      thumbnail,
+    },
+    {
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
 }
 
 export const updateItinerarie = (
@@ -74,12 +93,9 @@ export const updateItinerarie = (
     thumbnail,
   }
 ) => {
-  return api.put(`/itineraries/${id}`, {
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-    data: {
+  return api.put(
+    `/itineraries/${id}`,
+    {
       title,
       duration,
       country,
@@ -90,7 +106,13 @@ export const updateItinerarie = (
       idUser,
       thumbnail,
     },
-  })
+    {
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
 }
 
 export const deleteItinerarie = (id) => {

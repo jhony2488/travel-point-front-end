@@ -1,25 +1,17 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
-import {
-  Typography,
-  Container,
-  Modal,
-  Box,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Checkbox,
-} from "@material-ui/core";
+import { Typography, Container, Modal, Box } from "@material-ui/core";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import axios from "axios";
-import { updateTraveTip } from "../../services/traveTips";
 import { schemaItineraries } from "../../schemasValidations/itineraries";
 
 import { TravelTipsContentList, Button, Input } from "../../Components";
-import { getTraveTips, deleteTraveTip } from "../../services/traveTips";
+import {
+  getTraveTips,
+  deleteTraveTip,
+  updateTraveTip,
+} from "../../services/traveTips";
 import { useStyles } from "./style";
 
 export default function TravelTips() {
@@ -27,7 +19,7 @@ export default function TravelTips() {
 
   const [travelTips, setTravelTips] = useState([]);
 
-  const [travelTip, setTravelTip] = useState({});
+  const [travelTip, setTravelTip] = useState({ title: "", description: "" });
   const [isOpenModal, setOpenModal] = useState(false);
 
   const openModalEdit = (item) => {
@@ -53,6 +45,7 @@ export default function TravelTips() {
     await deleteTraveTip(id)
       .then((response) => {
         alert(response.data.message);
+        getAllTravelTips();
       })
       .catch((err) => {
         alert(err.data.message | err.message);
@@ -73,22 +66,26 @@ export default function TravelTips() {
     defaultValues,
   });
 
-  const handleSubmitUpdateTravelTip = async ({
-    title,
-    description
-  }) => {
-
+  const handleSubmitUpdateTravelTip = async ({ title, description }) => {
     updateTraveTip(travelTip._id, {
       title,
       description,
     })
       .then((response) => {
         alert("Sucess");
-        reset();
+        setTravelTip({ title: "", description: "" });
+        closeModal ();
+        getAllTravelTips();
       })
       .catch((err) => {
         alert(err.data.message | err.message);
       });
+  };
+
+  const changeInput = (key, value) => {
+    setTravelTip((prevState) => {
+      return { ...prevState, [key]: value };
+    });
   };
 
   useEffect(() => {
@@ -112,43 +109,45 @@ export default function TravelTips() {
       >
         <Box className={classes.box}>
           <Box className={classes.boxWrapper}>
-            <form onSubmit={handleSubmit(handleSubmitUpdateTravelTip)}>
               <Box className={classes.boxWrapper}>
                 <label htmlFor="input-title">Title</label>
                 <Input
                   id="input-title"
-                  control={control}
-                  nameInput={"title"}
+                  valueInput={travelTip?.title}
+                  onChange={(value) => {
+                    changeInput("title", value.target.value);
+                  }}
                   placeholder="To Brazil"
                 />
                 <p className={classes.errorMessage}>{errors.name?.message}</p>
                 <label htmlFor="input-duration">Description</label>
                 <Input
                   id="input-description"
-                  control={control}
-                  nameInput={"description"}
+                  valueInput={travelTip?.description}
+                  onChange={(value) => {
+                    changeInput("description", value.target.value);
+                  }}
                   type={"text"}
                   placeholder=""
                 />
-                <p className={classes.errorMessage}>{errors.description?.message}</p>
+                <p className={classes.errorMessage}>
+                  {errors.description?.message}
+                </p>
 
                 <div className={classes.containerButtons}>
+                  <Button variant="contained" color="primary" onClick={()=>handleSubmitUpdateTravelTip(travelTip)}>
+                    Update Travel Tip
+                  </Button>
                   <Button
                     variant="contained"
                     color="primary"
-                    className={classes.buttonSubmit}
-                    type="submit"
+                    style={{ background: "red", color: "white" }}
+                    onClick={() => closeModal()}
                   >
-                    Create
+                    Cancel
                   </Button>
                 </div>
               </Box>
-              <div className={classes.containerButtons}>
-                <Button variant="contained" color="primary">
-                  Update Travel Tip
-                </Button>
-              </div>
-            </form>
           </Box>
         </Box>
       </Modal>

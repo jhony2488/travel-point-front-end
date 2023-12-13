@@ -22,31 +22,36 @@ export const getTraveTips = (id) => {
 }
 
 export const setTraveTip = ({ title, description }) => {
-  return api.post('/travel-tips', {
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-    data: {
+  return api.post(
+    '/travel-tips',
+    {
       title,
 
       description,
     },
-  })
+    {
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
 }
 
 export const updateTraveTip = (id, { title, description }) => {
-  return api.put(`/travel-tips/${id}`, {
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-    data: {
+  return api.put(
+    `/travel-tips/${id}`,
+    {
       title,
-
       description,
     },
-  })
+    {
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
 }
 
 export const deleteTraveTip = (id) => {

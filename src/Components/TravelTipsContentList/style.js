@@ -34,7 +34,6 @@ export const searchStyles = makeStyles(() => {
             display: 'grid',
             'justify-items': 'center',
             'align-items': 'center',
-            gridTemplateColumns:'2.5fr 1fr'
         },
     });
 });

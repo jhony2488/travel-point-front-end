@@ -23,11 +23,9 @@ export default function CreateItineraries() {
   const classes = useStyles();
 
   const [file, setFile] = useState(null);
+  const [itinerary, setItinerary] = useState({isPublic: true, idUser: ''});
   const [countries, setCountries] = useState([]);
   const [cities, setCities] = useState([]);
-  const [country, setCountry] = useState();
-  const [isPublic, setIsPublic] = useState(true);
-  const [city, setCity] = useState();
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -39,7 +37,13 @@ export default function CreateItineraries() {
     control,
     reset,
   } = useForm({
-    resolver: yupResolver(schemaItineraries),
+    // resolver: yupResolver(schemaItineraries),
+    defaultValues: {
+      title: "",
+      duration: "",
+      dataInitial: "",
+      description: "",
+    },
   });
 
   const handleUpload = async () => {
@@ -50,8 +54,7 @@ export default function CreateItineraries() {
       // Substitua 'http://localhost:3001/upload' pela URL do seu endpoint de upload no servidor Node.js
       const response = await upload(formData);
 
-      console.log(response.data); // Lidere com a resposta do servidor conforme necessário
-      return formData;
+      return response;
     } catch (error) {
       console.error("Erro ao fazer upload do arquivo:", error);
     }
@@ -74,7 +77,7 @@ export default function CreateItineraries() {
       });
   };
 
-  const getCities = async () => {
+  const getCities = async (country) => {
     const options = {
       headers: {
         "Content-Type": "application/json; charset=utf-8",
@@ -101,22 +104,35 @@ export default function CreateItineraries() {
     dataInitial,
     description,
   }) => {
-    const token = await JSON.parse(localStorage.getItem("token-login") || "")
+    const token = await JSON.parse(localStorage.getItem("token-login") || "");
 
-    await handleUpload().then((uploadSubmit) => {
-      setItinerarie({
+    await handleUpload().then(async (uploadSubmit) => {
+      console.log({
         title,
         duration,
-        country,
-        city,
+        country: itinerary.country,
+        city: itinerary.city,
         dataInitial,
-        publicVisible: isPublic,
+        publicVisible: itinerary.isPublic,
         description,
-        idUser: token._id,
-        thumbnail: uploadSubmit.path,
+        idUser: token.user[0]._id,
+        thumbnail: uploadSubmit.data.path,
+      });
+      await setItinerarie({
+        title,
+        duration,
+        country: itinerary.country,
+        city: itinerary.city,
+        dataInitial,
+        publicVisible: itinerary.isPublic,
+        description,
+        idUser: token.user[0]._id,
+        thumbnail: uploadSubmit.data.path,
       })
         .then((response) => {
-          alert("Cadastro realizado com sucesso");
+          setTimeout(() => {
+            alert("Cadastro realizado com sucesso");
+          }, 2000);
           reset();
         })
         .catch((err) => {
@@ -125,13 +141,21 @@ export default function CreateItineraries() {
     });
   };
 
+  const changeInput = (key, value) => {
+    setItinerary((prevState) => {
+      return { ...prevState, [key]: value };
+    });
+  };
+
+  const changeInputCheckBox = (key, value) => {
+    setItinerary((prevState) => {
+      return { ...prevState, [key]: value };
+    });
+  };
+
   useEffect(() => {
     getCountries();
   }, []);
-
-  useEffect(() => {
-    getCities();
-  }, [country]);
 
   return (
     <>
@@ -156,18 +180,23 @@ export default function CreateItineraries() {
                 type={"number"}
                 placeholder="2"
               />
-
+              <p className={classes.errorMessage}>{errors.duration?.message}</p>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
-                  {country === "" || !country ? "Country" : country}
+                  {itinerary.country === "" || !itinerary.country
+                    ? "Country"
+                    : itinerary.country}
                 </InputLabel>
 
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={country}
+                  value={itinerary.country || ""}
                   label="Country"
-                  onChange={(event) => setCountry(event.target.value)}
+                  onChange={(event) => {
+                    changeInput("country", event.target.value);
+                    getCities(event.target.value);
+                  }}
                 >
                   <MenuItem
                     value=""
@@ -178,63 +207,97 @@ export default function CreateItineraries() {
                   </MenuItem>
 
                   {countries ? (
-                    countries?.map((item, key) => {
-                      console.log(item.name.common);
-                      return (
-                        <MenuItem
-                          color={"black"}
-                          className={classes.itemSelect}
-                          key={key}
-                          value={item.name.common}
-                        >
-                          {item.name.common}
-                        </MenuItem>
-                      );
-                    })
+                    countries?.map((item, key) => (
+                      <MenuItem
+                        color={"black"}
+                        className={classes.itemSelect}
+                        key={key}
+                        value={item.name.common}
+                      >
+                        {item.name.common}
+                      </MenuItem>
+                    ))
                   ) : (
-                    <></>
+                    <MenuItem
+                      value=""
+                      color={"black"}
+                      className={classes.itemSelect}
+                    >
+                      country
+                    </MenuItem>
                   )}
                 </Select>
               </FormControl>
-              {country && country !== "" ? (
+
+              {itinerary.country && itinerary.country !== "" ? (
                 cities?.data?.length == 0 ? (
-                  <></>
+                  <MenuItem
+                    value=""
+                    color={"black"}
+                    className={classes.itemSelect}
+                  >
+                    country
+                  </MenuItem>
                 ) : (
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">
-                      {city === "" || !city ? "City" : city}
+                      {itinerary.city === "" || !itinerary.city
+                        ? "City"
+                        : itinerary.city}
                     </InputLabel>
 
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={city}
+                      value={itinerary.city || ""}
                       label="Country"
-                      placeholder={city === "" || !city ? "City" : city}
-                      onChange={(event) => setCity(event.target.value)}
+                      placeholder={
+                        itinerary.city === "" || !itinerary.city
+                          ? "City"
+                          : itinerary.city
+                      }
+                      onChange={(event) => {
+                        changeInput("city", event.target.value);
+                      }}
                     >
+                      <MenuItem
+                        value=""
+                        color={"black"}
+                        className={classes.itemSelect}
+                      >
+                        City
+                      </MenuItem>
                       {cities.data ? (
-                        cities?.data?.map((item, key) => {
-                          console.log(item);
-                          return (
-                            <MenuItem
-                              color={"black"}
-                              className={classes.itemSelect}
-                              key={key}
-                              value={item}
-                            >
-                              {item}
-                            </MenuItem>
-                          );
-                        })
+                        cities?.data?.map((item, key) => (
+                          <MenuItem
+                            color={"black"}
+                            className={classes.itemSelect}
+                            key={key}
+                            value={item}
+                          >
+                            {item}
+                          </MenuItem>
+                        ))
                       ) : (
-                        <></>
+                        <MenuItem
+                          value=""
+                          color={"black"}
+                          className={classes.itemSelect}
+                        >
+                          City
+                        </MenuItem>
                       )}
                     </Select>
                   </FormControl>
                 )
               ) : (
-                <></>
+                <MenuItem
+                  value=""
+                  color={"black"}
+                  className={classes.itemSelect}
+                >
+                  City
+                </MenuItem>
               )}
               <label htmlFor="input-date-initial">Initial Date</label>
               <Input
@@ -246,7 +309,9 @@ export default function CreateItineraries() {
                 mask="99/99/9999"
                 placeholder="29/01/2034"
               />
-
+              <p className={classes.errorMessage}>
+                {errors.dataInitial?.message}
+              </p>
               <label htmlFor="input-description">Description</label>
               <Input
                 id="input-description"
@@ -254,11 +319,15 @@ export default function CreateItineraries() {
                 nameInput={"description"}
                 type={"text"}
               />
+              <p className={classes.errorMessage}>
+                {errors.description?.message}
+              </p>
               <label htmlFor="input-email">Is Public</label>
               <Checkbox
-                defaultChecked
-                value={isPublic}
-                onChange={(event) => setIsPublic(event.target.value)}
+                checked={itinerary.isPublic || true}
+                onChange={(value, checked) =>
+                  changeInputCheckBox("isPublic", checked)
+                }
               />
 
               <label htmlFor="input-file">Image</label>
@@ -268,8 +337,8 @@ export default function CreateItineraries() {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={handleSubmit(handleSubmitSetItineraries)}
                   className={classes.buttonSubmit}
+                  type="submit"
                 >
                   Create
                 </Button>

@@ -10,8 +10,11 @@ export const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
-  modal: {
-    padding: '16px'
+  modal:{
+    width: '100vw'
+  },
+  itemSelect:{
+    color: 'black',
   },
   title: {
     marginTop: '32px',
@@ -27,25 +30,19 @@ export const useStyles = makeStyles((theme) => ({
     'justify-content': 'center',
     'align-items': 'center',
     width: '100%',
-    height: '60vh',
+    height: '100vh',
   },
   boxWrapper:{
-
-    width: '30vw',
-    display: 'flex',
-    flexDirection: 'column',
-  
-    padding: '8px',
-    gap:'4px',
-    '@media (max-width: 1080px)': {
-      width: '80vw',
-    },
+    background: 'white',
+    display: 'grid',
+    padding: '16px',
+    gap:'12px'
   },
   titleModal:{
     alignItem: 'center',
   },
   containerButtons:{
-    display: 'grid',
+    display: 'flex',
     width: '100%',
     'justify-items': 'center',
     gap:'8px',

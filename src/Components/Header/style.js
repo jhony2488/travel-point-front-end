@@ -2,15 +2,15 @@ import { makeStyles } from '@material-ui/core/styles'
 
 export const useStyles = makeStyles((theme) => ({
   root: {},
-  rootWrapper:{
+  rootWrapper: {
     display: 'flex',
     gap: '25px',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingLeft:'10%',
-    paddingRight:'10%',
+    paddingLeft: '10%',
+    paddingRight: '10%',
   },
-  containerButtonAuth:{
+  containerButtonAuth: {
     display: 'flex',
     gap: '8px',
   },
@@ -30,11 +30,19 @@ export const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     color: 'orange',
   },
+  inputFile:{
+    visibly: 'hidden'
+  },
   titleLink: {
     flexGrow: 1,
     color: 'orange',
-    'text-decoration': 'none'
-  },
+    'text-decoration': 'none',
+   labelInputFile: {
+    border: '1px solid black',
+    background: 'blue',
+    color: 'white',
+  },},
+ 
   nav: {
     display: 'flex',
     gap: '25px',

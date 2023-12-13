@@ -15,7 +15,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { schemaItineraries } from "../../schemasValidations/itineraries";
-import { getItineraries, deleteItinerarie , updateItinerarie} from "../../services/Itineraries";
+import {
+  getItineraries,
+  deleteItinerarie,
+  updateItinerarie,
+} from "../../services/Itineraries";
 import { upload } from "../../services/upload";
 import { ItinerariesContentList, Button, Input } from "../../Components";
 import { useStyles } from "./style";
@@ -24,14 +28,13 @@ export default function Itineraries() {
   const classes = useStyles();
 
   const [itineraries, setItineraries] = useState([]);
-  const [itinerary, setItinerary] = useState({});
+  const [itinerary, setItinerary] = useState({ publicVisible: true, idUser: "" });
   const [isOpenModal, setOpenModal] = useState(false);
 
   const [file, setFile] = useState(null);
   const [countries, setCountries] = useState([]);
   const [cities, setCities] = useState([]);
   const [country, setCountry] = useState();
-  const [isPublic, setIsPublic] = useState(true);
   const [city, setCity] = useState();
 
   const handleFileChange = (e) => {
@@ -39,7 +42,8 @@ export default function Itineraries() {
   };
 
   const getAllItineraries = async () => {
-    await getItineraries()
+    const token = await JSON.parse(localStorage.getItem("token-login") || "");
+    await getItineraries({ idUser: null })
       .then((response) => {
         setItineraries(response.data.result);
       })
@@ -52,6 +56,7 @@ export default function Itineraries() {
     await deleteItinerarie(id)
       .then((response) => {
         alert(response.data.message);
+        getAllItineraries();
       })
       .catch((err) => {
         alert(err.data.message | err.message);
@@ -60,6 +65,8 @@ export default function Itineraries() {
 
   const openModalEdit = (item) => {
     setItinerary(item);
+    setCountry(item.country);
+    setCity(item.city);
     setOpenModal(!isOpenModal);
   };
 
@@ -67,10 +74,12 @@ export default function Itineraries() {
     setOpenModal(!isOpenModal);
   };
 
-  const  defaultValues ={...itinerary ,file, country,
-      city,
-      publicVisible: isPublic,
-    }
+  const defaultValues = {
+    ...itinerary,
+    file,
+    country,
+    city,
+  };
 
   const {
     handleSubmit,
@@ -79,7 +88,7 @@ export default function Itineraries() {
     reset,
   } = useForm({
     resolver: yupResolver(schemaItineraries),
-    defaultValues
+    defaultValues,
   });
 
   const handleUpload = async () => {
@@ -91,7 +100,7 @@ export default function Itineraries() {
       const response = await upload(formData);
 
       console.log(response.data); // Lidere com a resposta do servidor conforme necessário
-      return formData;
+      return response;
     } catch (error) {
       console.error("Erro ao fazer upload do arquivo:", error);
     }
@@ -140,33 +149,44 @@ export default function Itineraries() {
     duration,
     dataInitial,
     description,
+    publicVisible
   }) => {
-    const token = await JSON.parse(localStorage.getItem("token-login")) || "";
+    const token = (await JSON.parse(localStorage.getItem("token-login"))) || "";
 
-  await handleUpload().then((item)=>{
-      updateItinerarie(itinerary._id,{
+    await handleUpload().then((item) => {
+      updateItinerarie(itinerary._id, {
         title,
         duration,
         description,
         dataInitial,
         country,
         city,
-        
-        publicVisible: isPublic,
-        
-        idUser: token._id,
-        thumbnail: item.path,
+        publicVisible,
+        idUser: token.user[0]._id,
+        thumbnail: item.data.path,
       })
         .then((response) => {
           alert("Sucess");
-          reset();
+          setItinerary({ publicVisible: true, idUser: "" });
+          closeModal();
+          getAllItineraries();
         })
         .catch((err) => {
           alert(err.data.message | err.message);
         });
     });
+  };
 
-   
+  const changeInput = (key, value) => {
+    setItinerary((prevState) => {
+      return { ...prevState, [key]: value };
+    });
+  };
+
+  const changeInputCheckBox = (key, value) => {
+    setItinerary((prevState) => {
+      return { ...prevState, [key]: value };
+    });
   };
 
   useEffect(() => {
@@ -176,6 +196,7 @@ export default function Itineraries() {
       window.location.href = "/";
     }
     getCountries();
+
     getAllItineraries();
   }, []);
 
@@ -187,28 +208,31 @@ export default function Itineraries() {
     <>
       <Modal
         open={isOpenModal}
-        onClose={closeModal}
         className={classes.modal}
+        onClose={closeModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box className={classes.box}>
           <Box className={classes.boxWrapper}>
-            <form onSubmit={handleSubmit(handleSubmitUpdateItineraries)}>
               <Box className={classes.boxWrapper}>
                 <label htmlFor="input-title">Title</label>
                 <Input
                   id="input-title"
-                  control={control}
-                  nameInput={"title"}
+                  valueInput={itinerary?.title || ""}
+                  onChange={(value) => {
+                    changeInput("title", value.target.value);
+                  }}
                   placeholder="To Brazil"
                 />
                 <p className={classes.errorMessage}>{errors.name?.message}</p>
                 <label htmlFor="input-duration">Duration in days</label>
                 <Input
                   id="input-duration"
-                  control={control}
-                  nameInput={"duration"}
+                  valueInput={itinerary?.duration || ""}
+                  onChange={(value) => {
+                    changeInput("duration", value.target.value);
+                  }}
                   type={"number"}
                   placeholder="2"
                 />
@@ -296,8 +320,10 @@ export default function Itineraries() {
                 <label htmlFor="input-date-initial">Initial Date</label>
                 <Input
                   id="input-date-initial"
-                  control={control}
-                  nameInput={"dataInitial"}
+                  valueInput={itinerary?.dataInitial || ""}
+                  onChange={(value) => {
+                    changeInput("dataInitial", value.target.value);
+                  }}
                   type={"text"}
                   isMask
                   mask="99/99/9999"
@@ -307,26 +333,34 @@ export default function Itineraries() {
                 <label htmlFor="input-description">Description</label>
                 <Input
                   id="input-description"
-                  control={control}
-                  nameInput={"description"}
+                  valueInput={itinerary?.description || ""}
+                  onChange={(value) => {
+                    changeInput("description", value.target.value);
+                  }}
                   type={"text"}
                 />
                 <label htmlFor="input-email">Is Public</label>
                 <Checkbox
-                  defaultChecked
-                  value={isPublic}
-                  onChange={(event) => setIsPublic(event.target.value)}
+                  checked={itinerary.publicVisible }
+                  onChange={(value, checked) =>
+                    changeInputCheckBox("publicVisible", checked)
+                  }
                 />
 
-                <label htmlFor="input-file">Image</label>
+                <label htmlFor="input-password">Image</label>
                 <input type="file" name="file" onChange={handleFileChange} />
+                <p className={classes.errorMessage}>
+                  {errors.password?.message}
+                </p>
               </Box>
               <div className={classes.containerButtons}>
-                <Button variant="contained" color="primary">
+                <Button variant="contained" color="primary" onClick={()=> handleSubmitUpdateItineraries(itinerary)}>
                   Update Itinerary
                 </Button>
+                <Button variant="contained" color="primary" style={{background: 'red', color: 'white'}} onClick={()=> closeModal()}>
+                  Cancel
+                </Button>
               </div>
-            </form>
           </Box>
         </Box>
       </Modal>

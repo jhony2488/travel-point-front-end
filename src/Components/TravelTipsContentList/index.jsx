@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { searchStyles } from "./style";
-import { Edit, CheckCircle, Close, DeleteOutline } from "@material-ui/icons";
+import { Edit, DeleteOutline } from "@material-ui/icons";
 
 export default function ReservationsContentList({
   travelTips,
@@ -19,7 +19,6 @@ export default function ReservationsContentList({
     card,
     textContent,
     textNotContent,
-    spanTextContent,
     cardContent,
   } = searchStyles();
 
@@ -47,17 +46,9 @@ export default function ReservationsContentList({
               <Typography variant="h4" className={textContent}>
                 {item.title}
               </Typography>
-              <Typography variant="p" className={textContent}>
+              <Typography variant="h4" className={textContent}>
                 {item.description}
               </Typography>
-
-              <span className={spanTextContent}>
-                {item.active ? (
-                  <CheckCircle color="secondary" />
-                ) : (
-                  <Close color="error" />
-                )}
-              </span>
             </CardContent>
             {tokenUser !== "" && (
               <CardActions>
@@ -71,7 +62,7 @@ export default function ReservationsContentList({
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => handleDelete(item.reservation_id)}
+                  onClick={() => handleDelete(item._id)}
                 >
                   <DeleteOutline color="error" />
                 </Button>
