@@ -43,8 +43,8 @@ export default function SignUp() {
   };
 
   const handleSubmitSignUp = async ({ name, email, password }) => {
-    await handleUpload().then((uploadSubmit) => {
-      setUser(name, email, password, uploadSubmit.data.path)
+
+      setUser(name, email, password, null)
         .then((response) => {
           alert("Registration completed successfully");
           reset();
@@ -53,7 +53,6 @@ export default function SignUp() {
         .catch((err) => {
           alert(err.data.message | err.message);
         });
-    });
   };
 
   return (
@@ -88,8 +87,6 @@ export default function SignUp() {
                 control={control}
                 nameInput={"password"}
               />
-              <label htmlFor="input-password">Image perfil user</label>
-              <input type="file" name="file" onChange={handleFileChange} />
               <p className={classes.errorMessage}>{errors.password?.message}</p>
               <div className={classes.containerButtons}>
                 <Button

@@ -38,6 +38,7 @@ export default function CreateItineraries() {
     })
       .then((response) => {
         alert("Registration completed successfully");
+        window.location.href = "/travel-tips";
         reset();
       })
       .catch((err) => {

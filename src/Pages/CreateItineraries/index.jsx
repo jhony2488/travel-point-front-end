@@ -122,7 +122,8 @@ export default function CreateItineraries() {
         .then((response) => {
           setTimeout(() => {
             alert("Registration completed successfully");
-          }, 2000);
+            window.location.href = "/travel-tips";
+          }, 1000);
           reset();
         })
         .catch((err) => {
