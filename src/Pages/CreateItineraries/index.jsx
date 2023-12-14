@@ -107,17 +107,7 @@ export default function CreateItineraries() {
     const token = await JSON.parse(localStorage.getItem("token-login") || "");
 
     await handleUpload().then(async (uploadSubmit) => {
-      console.log({
-        title,
-        duration,
-        country: itinerary.country,
-        city: itinerary.city,
-        dataInitial,
-        publicVisible: itinerary.isPublic,
-        description,
-        idUser: token.user[0]._id,
-        thumbnail: uploadSubmit.data.path,
-      });
+
       await setItinerarie({
         title,
         duration,
@@ -131,7 +121,7 @@ export default function CreateItineraries() {
       })
         .then((response) => {
           setTimeout(() => {
-            alert("Cadastro realizado com sucesso");
+            alert("Registration completed successfully");
           }, 2000);
           reset();
         })
@@ -324,7 +314,7 @@ export default function CreateItineraries() {
               </p>
               <label htmlFor="input-email">Is Public</label>
               <Checkbox
-                checked={itinerary.isPublic || true}
+                checked={itinerary.isPublic}
                 onChange={(value, checked) =>
                   changeInputCheckBox("isPublic", checked)
                 }

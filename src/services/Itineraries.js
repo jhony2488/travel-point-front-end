@@ -4,7 +4,7 @@ import { api, token } from './api'
 
 export const getItineraries = ({ id=null, idUser=null }) => {
   const filter = `?id=${id}`
-  const filterIdUser = `?id=${idUser}`
+  const filterIdUser = `?idUser=${idUser}`
 
   if (id) {
     return api.get(`/itineraries${filter}`, {

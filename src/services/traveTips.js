@@ -21,12 +21,12 @@ export const getTraveTips = (id) => {
   })
 }
 
-export const setTraveTip = ({ title, description }) => {
+export const setTraveTip = ({ title, description,userId }) => {
   return api.post(
     '/travel-tips',
     {
       title,
-
+      userId,
       description,
     },
     {

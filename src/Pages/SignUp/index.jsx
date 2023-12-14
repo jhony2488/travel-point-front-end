@@ -38,7 +38,7 @@ export default function SignUp() {
       console.log(response.data); // Lidere com a resposta do servidor conforme necessário
       return response;
     } catch (error) {
-      console.error("Erro ao fazer upload do arquivo:", error);
+      console.error("Error in file:", error);
     }
   };
 
@@ -46,8 +46,9 @@ export default function SignUp() {
     await handleUpload().then((uploadSubmit) => {
       setUser(name, email, password, uploadSubmit.data.path)
         .then((response) => {
-          alert("Cadastro realizado com sucesso");
+          alert("Registration completed successfully");
           reset();
+          window.location.href="/login";
         })
         .catch((err) => {
           alert(err.data.message | err.message);
@@ -75,7 +76,7 @@ export default function SignUp() {
                 id="input-email"
                 control={control}
                 nameInput={"email"}
-                placeholder="jhonata@email.com"
+                placeholder="renan@email.com"
               />
               <p className={classes.errorMessage}>{errors.email?.message}</p>
               <label htmlFor="input-password" className={classes.labelInputFile}>Password</label>

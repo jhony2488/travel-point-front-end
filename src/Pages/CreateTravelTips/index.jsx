@@ -29,13 +29,15 @@ export default function CreateItineraries() {
     title,
     description,
   }) => {
+    const token = await JSON.parse(localStorage.getItem("token-login") || "");
 
     setTraveTip({
       title,
       description,
+      userId: token.user[0]._id,
     })
       .then((response) => {
-        alert("Cadastro realizado com sucesso");
+        alert("Registration completed successfully");
         reset();
       })
       .catch((err) => {

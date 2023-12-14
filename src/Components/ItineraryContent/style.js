@@ -11,14 +11,23 @@ export const searchStyles = makeStyles(() => {
             'justify-items': 'center',
             paddingBottom: '30px'
         },
-        card: {
+        cardImage: {
+            width: '100%',
+            'max-height': '100px',
+          },
+          card: {
             marginTop: '16px',
             display: 'grid',
             'justify-items': 'center',
             'max-width': '300px',
             'align-content': 'center',
             paddingBottom: '8px',
-        },
+          },
+          contentCard: {
+            display: 'grid',
+            marginTop: '8px',
+            'grid-template-columns': '1fr 1fr',
+          },
         textContent: {
             'font-size': '12px',
             marginTop: '8px',
@@ -34,7 +43,6 @@ export const searchStyles = makeStyles(() => {
             display: 'grid',
             'justify-items': 'center',
             'align-items': 'center',
-            gridTemplateColumns:'2.5fr 1fr'
         },
     });
 });

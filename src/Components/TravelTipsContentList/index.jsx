@@ -24,53 +24,47 @@ export default function ReservationsContentList({
 
   const [result, setResult] = useState(travelTips);
 
-  const [tokenUser, setTokenUser] = useState();
-
   useEffect(() => {
     setResult([]);
     setResult(travelTips);
   }, [travelTips]);
 
-  useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("token-login") || "");
-
-    setTokenUser(token);
-  }, []);
-
   return (
     <div className={container}>
       {result.length > 0 ? (
-        result?.map((item, index) => (
-          <Card key={index} className={card}>
-            <CardContent className={cardContent}>
-              <Typography variant="h4" className={textContent}>
-                {item.title}
-              </Typography>
-              <Typography variant="h4" className={textContent}>
-                {item.description}
-              </Typography>
-            </CardContent>
-            {tokenUser !== "" && (
-              <CardActions>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => openModalEdit(item)}
-                >
-                  <Edit />
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleDelete(item._id)}
-                >
-                  <DeleteOutline color="error" />
-                </Button>
-              </CardActions>
-            )}
-          </Card>
-        ))
-      ) : (
+        result?.map((item, index) => {
+          const token = JSON.parse(localStorage.getItem("token-login") || "");
+          return (
+            <Card key={index} className={card}>
+              <CardContent className={cardContent}>
+                <Typography variant="h4" className={textContent}>
+                  {item.title}
+                </Typography>
+                <Typography variant="h4" className={textContent}>
+                  {item.description}
+                </Typography>
+              </CardContent>
+              {token.user[0]._id === item.userId && (
+                <CardActions>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => openModalEdit(item)}
+                  >
+                    <Edit />
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleDelete(item._id)}
+                  >
+                    <DeleteOutline color="error" />
+                  </Button>
+                </CardActions>
+              )}
+            </Card>
+          )
+        })) : (
         <Typography variant="h4" className={textNotContent}>
          Not Found
         </Typography>

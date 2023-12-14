@@ -72,7 +72,7 @@ export default function TravelTips() {
       description,
     })
       .then((response) => {
-        alert("Sucess");
+        alert("Success");
         setTravelTip({ title: "", description: "" });
         closeModal ();
         getAllTravelTips();

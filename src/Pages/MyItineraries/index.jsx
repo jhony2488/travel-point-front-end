@@ -46,9 +46,9 @@ export default function MyItineraries() {
   const getMyItineraries = async () => {
     const token = await JSON.parse(localStorage.getItem("token-login") || "");
 
-    await getItineraries({ idUser: token._id })
+    await getItineraries({ idUser: token.user[0]._id })
       .then((response) => {
-        setMyItineraries(response.data.result);
+        setMyItineraries(response.data.result ? response.data.result : []);
       })
       .catch((err) => {
         alert(err.data.message | err.message);
@@ -171,7 +171,7 @@ export default function MyItineraries() {
         thumbnail: item.data.path,
       })
         .then((response) => {
-          alert("Sucess");
+          alert("Success");
           setItinerary({ publicVisible: true, idUser: "" });
           closeModal();
           getMyItineraries();

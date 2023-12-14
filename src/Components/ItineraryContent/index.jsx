@@ -21,6 +21,8 @@ export default function ItineraryContent({
     textNotContent,
     spanTextContent,
     cardContent,
+    contentCard,
+    cardImage
   } = searchStyles();
 
   const [result, setResult] = useState(itinerary);
@@ -28,7 +30,7 @@ export default function ItineraryContent({
   const [tokenUser, setTokenUser] = useState();
 
   useEffect(() => {
-    setResult({});
+    setResult([]);
     setResult(itinerary);
   }, [itinerary]);
 
@@ -43,39 +45,42 @@ export default function ItineraryContent({
       {result.length > 0 ? (
         <Card className={card}>
           <CardContent className={cardContent}>
-            <img src={result.thumbnail} alt={result.title} />
+            <img className={cardImage} src={result[0].thumbnail} alt={result.title} />
+            <div className={contentCard}>
             <Typography variant="h4" className={textContent}>
-              {result.title}
+              {result[0].title}
             </Typography>
             <Typography variant="h4" className={textContent}>
-              {result.duration} dias
+              {result[0].duration} dias
             </Typography>
             <Typography variant="h4" className={textContent}>
-              Pais: {result.country}
+              Pais: {result[0].country}
             </Typography>
 
             <Typography variant="h4" className={textContent}>
-              Cidade: {result.city}
+              Cidade: {result[0].city}
             </Typography>
             <Typography variant="h4" className={textContent}>
-              Data inicial: {result.dataInitial}
+              Data inicial: {result[0].dataInitial}
             </Typography>
+            </div>
+          
             <Typography variant="h4" className={textContent}>
               Description:
             </Typography>
             <Typography variant="p" className={textContent}>
-              {result.description}
+              {result[0].description}
             </Typography>
 
             <span className={spanTextContent}>
-              {result.publicVisible ? (
+              {result[0].publicVisible ? (
                 <CheckCircle color="secondary" />
               ) : (
                 <Close color="error" />
               )}
             </span>
           </CardContent>
-          {tokenUser._id === result.userId ? (
+          {tokenUser?.user[0]?._id === result[0].userId ? (
             <CardActions>
               <Button
                 variant="contained"

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { Typography, Container } from "@material-ui/core";
-import { ItinerariesContentList,Button } from "../../Components";
+import { ItineraryContent,Button } from "../../Components";
 import { getItineraries, deleteItinerarie } from "../../services/Itineraries";
 import { useStyles } from "./style";
 
@@ -12,6 +12,7 @@ export default function ViewUnicItinerary({ match }) {
 
   const getItinerary = async () => {
     const id = await  match?.params?.id;
+
 
     await getItineraries({id})
       .then((response) => {
@@ -46,8 +47,8 @@ export default function ViewUnicItinerary({ match }) {
     <>
       <Container className={classes.main}>
         <Typography className={classes.title}>Itinerary</Typography>
-        <ItinerariesContentList
-          itineraries={itinerary}
+        <ItineraryContent
+          itinerary={typeof itinerary ==='object' ? [itinerary] : itinerary}
           openModalEdit={() => null}
           handleDelete={deleteItinerary}
         />

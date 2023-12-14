@@ -55,7 +55,7 @@ export default function Login() {
                 id="input-email"
                 control={control}
                 nameInput={"email"}
-                placeholder="jhonata@email.com"
+                placeholder="renan@email.com"
               />
               <p className={classes.errorMessage}>{errors.email?.message}</p>
               <label htmlFor="input-password">Password</label>

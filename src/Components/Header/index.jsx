@@ -37,7 +37,7 @@ export default function Header() {
         <Container className={classes.rootWrapper}>
           <h1 className={classes.title}>
             <a href="/" className={classes.titleLink}>
-              Travel Point
+              Travel Manager
             </a>
           </h1>
 
@@ -117,13 +117,6 @@ export default function Header() {
               >
                 Login
               </Button>
-            </div>
-          )}
-          {token.user && (
-            <div>
-              <a href={"/user:" + token.user[0]._id}>
-                <img src={token.user[0].photo} alt="Sua foto de perfil" />
-              </a>
             </div>
           )}
           {isTabletOrMobile && isLogged ? (
