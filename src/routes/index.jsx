@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Redirect, Switch } from "react-router-dom";
+import { HashRouter, Redirect, Switch } from "react-router-dom";
 import { RouteLayout } from "../Components";
 import WithHeader from "../Layouts/WithHeader";
 import {
@@ -17,10 +17,9 @@ import {
 
 function Routes() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Switch>
-        <Redirect exact from="/" to="/home" />
-        <RouteLayout path="/home" exact component={Home} layout={WithHeader} />
+        <RouteLayout path="/" exact component={Home} layout={WithHeader} />
         <RouteLayout
           path="/signup"
           exact
@@ -77,7 +76,7 @@ function Routes() {
           isError404
         />
       </Switch>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
