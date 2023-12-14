@@ -18,11 +18,11 @@ export const useStyles = makeStyles((theme) => ({
   },
   title: {
     marginTop: '32px',
-    marginBottom: '-32px',
+    marginBottom: '-10px',
     fontSize: '48px',
     textAlign: 'center',
     '@media (max-width: 760px)': {
-      marginBottom: '-48px',
+      marginBottom: '-19px',
     },
   },
   box:{
@@ -44,7 +44,7 @@ export const useStyles = makeStyles((theme) => ({
   containerButtonAdd:{
     display: 'grid',
     justifyItems: 'center',
-    marginTop: '8px',
+    marginTop: '20px',
     marginBottom: '8px',
   },
   containerButtons:{
