@@ -151,7 +151,7 @@ export default function Itineraries() {
     description,
     publicVisible
   }) => {
-    const token = (await JSON.parse(localStorage.getItem("token-login"))) || "";
+    const token = await JSON.parse(localStorage.getItem("token-login")) || "";
 
     await handleUpload().then((item) => {
       updateItinerarie(itinerary._id, {
@@ -366,6 +366,7 @@ export default function Itineraries() {
       </Modal>
       <Container className={classes.main}>
         <Typography className={classes.title}>Itineraries</Typography>
+        <div className={classes.containerButtonAdd}>
         <Button
           onClick={() => {
             window.location.href = "/created-itineraries";
@@ -375,6 +376,7 @@ export default function Itineraries() {
         >
           +
         </Button>
+        </div>
         <ItinerariesContentList
           itineraries={itineraries}
           openModalEdit={openModalEdit}

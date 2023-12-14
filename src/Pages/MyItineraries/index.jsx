@@ -371,6 +371,7 @@ export default function MyItineraries() {
       </Modal>
       <Container className={classes.main}>
         <Typography className={classes.title}>My Itineraries</Typography>
+        <div className={classes.containerButtonAdd}>
         <Button
           onClick={() => {
             window.location.href = "/created-itineraries";
@@ -380,6 +381,7 @@ export default function MyItineraries() {
         >
           +
         </Button>
+        </div>
         <ItinerariesContentList
           itineraries={myItineraries}
           openModalEdit={openModalEdit}

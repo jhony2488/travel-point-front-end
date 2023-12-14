@@ -48,6 +48,12 @@ export const useStyles = makeStyles((theme) => ({
     gap:'8px',
 
   },
+  containerButtonAdd:{
+    display: 'grid',
+    justifyItems: 'center',
+    marginTop: '8px',
+    marginBottom: '8px',
+  },
   buttonSubmit:{
     width: '70%',
     '@media (max-width: 760px)': {

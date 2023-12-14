@@ -153,6 +153,7 @@ export default function TravelTips() {
       </Modal>
       <Container className={classes.main}>
         <Typography className={classes.title}>Travel Tips</Typography>
+        <div className={classes.containerButtonAdd}>
         <Button
           onClick={() => {
             window.location.href = "/created-travel-tips";
@@ -162,6 +163,7 @@ export default function TravelTips() {
         >
           +
         </Button>
+        </div>
         <TravelTipsContentList
           travelTips={travelTips}
           openModalEdit={openModalEdit}

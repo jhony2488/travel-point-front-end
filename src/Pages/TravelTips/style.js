@@ -38,6 +38,12 @@ export const useStyles = makeStyles((theme) => ({
   titleModal:{
     alignItem: 'center',
   },
+  containerButtonAdd:{
+    display: 'grid',
+    justifyItems: 'center',
+    marginTop: '8px',
+    marginBottom: '8px',
+  },
   containerButtons:{
     display: 'grid',
     width: '100%',
